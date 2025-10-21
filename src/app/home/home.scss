@@ -1,9 +1,92 @@
-.home-container {
+/* :host é o seletor do próprio componente (app-home) */
+:host {
+  display: block;
+  background-color: var(--surface-ground, #f8f9fb);
   min-height: 100vh;
+}
+
+/* Layout com sidebar à esquerda */
+.layout {
+  display: grid;
+  grid-template-columns: 240px 1fr;
+  min-height: 100vh;
+}
+
+.sidebar {
+  padding: 1rem;
+  border-right: 1px solid var(--surface-border);
+  position: sticky;
+  top: 0;
+  height: 100vh;
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
+}
+
+.sidebar-nav .nav-link {
+  display: flex;
   align-items: center;
-  justify-content: center;
-  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-  color: #0F5DA8;
+  gap: 0.75rem;
+  padding: 0.75rem 0.75rem;
+  color: var(--text-color-secondary);
+  border-radius: 8px;
+  text-decoration: none;
+}
+
+.sidebar-nav .nav-link i {
+  font-size: 1rem;
+}
+
+.sidebar-nav .nav-link:hover {
+  background: var(--surface-100);
+  color: var(--text-color);
+}
+
+.sidebar-nav .active-link {
+  background: var(--primary-50, rgba(59,130,246,0.12));
+  color: var(--primary-color);
+}
+
+.main-content {
+  min-height: 100vh;
+  background: transparent;
+}
+
+/* Estilo do Avatar do usuário no topo */
+.user-avatar {
+  background-color: #fdd8b1;
+  color: #a36429;
+}
+
+/* Ajustes finos em PrimeNG - mantidos do arquivo original */
+:host ::ng-deep .p-card .p-card-body {
+  padding: 1.5rem;
+}
+
+:host ::ng-deep .p-card .p-card-content {
+  padding-top: 1rem;
+  padding-bottom: 0.5rem;
+}
+
+:host ::ng-deep .p-selectbutton .p-button {
+  background: var(--surface-a);
+  border-color: var(--surface-d);
+  color: var(--text-color-secondary);
+  font-weight: 500;
+  padding: 0.5rem 1rem;
+}
+
+:host ::ng-deep .p-selectbutton .p-button:not(.p-highlight):hover {
+  background: var(--surface-c);
+}
+
+:host ::ng-deep .p-selectbutton .p-button.p-highlight {
+  background: var(--primary-color);
+  border-color: var(--primary-color);
+  color: var(--primary-color-text);
+}
+
+:host ::ng-deep .p-selectbutton .p-button.p-highlight:hover {
+  background: var(--primary-color-dark);
+  border-color: var(--primary-color-dark);
 }
