@@ -1,10 +1,6 @@
 <!-- O componente <p-toast> é essencial para mostrar as mensagens de sucesso/erro -->
 <p-toast></p-toast>
 
-<!--
-LAYOUT: Fundo sólido azul escuro do Placehold.co.
-O formulário branco (surface-card) se destaca perfeitamente no fundo escuro.
--->
 <div
   class="login-page flex min-h-screen align-items-center justify-content-center p-4"
   style="
@@ -50,9 +46,6 @@ O formulário branco (surface-card) se destaca perfeitamente no fundo escuro.
     </div>
 
 
-    <!-- ================================== -->
-    <!-- ========= FORMULÁRIO DE LOGIN ==== -->
-    <!-- ================================== -->
     <div *ngIf="formMode === 'LOGIN'">
       <div class="text-center mb-5">
         <div class="text-900 text-3xl font-medium mb-3">Acesso ao Sistema</div>
@@ -76,9 +69,7 @@ O formulário branco (surface-card) se destaca perfeitamente no fundo escuro.
       </form>
     </div>
 
-    <!-- =================================== -->
-    <!-- ========= FORMULÁRIO DE REGISTO ==== -->
-    <!-- =================================== -->
+
     <div *ngIf="formMode === 'REGISTER'">
       <div class="text-center mb-5">
         <div class="text-900 text-3xl font-medium mb-3">Crie a sua Conta</div>
@@ -106,7 +97,7 @@ O formulário branco (surface-card) se destaca perfeitamente no fundo escuro.
           <span *ngIf="form.get('email')?.errors?.['maxlength']">Email deve ter no máximo 100 caracteres.</span>
         </div>
 
-        <!-- CAMPOS ADICIONAIS DE REGISTO -->
+
         <div class="grid">
           <div class="field col-12 md:col-6">
             <label>CPF</label>
@@ -150,7 +141,7 @@ O formulário branco (surface-card) se destaca perfeitamente no fundo escuro.
         <div *ngIf="form.get('confirmaSenha')?.invalid && (form.get('confirmaSenha')?.dirty || form.get('confirmaSenha')?.touched)" class="p-error text-sm mb-3">
           <span *ngIf="form.get('confirmaSenha')?.errors?.['required']">Confirmação de senha é obrigatória.</span>
         </div>
-        <!-- MENSAGEM DE ERRO PARA SENHAS QUE NÃO COINCIDEM -->
+
         <div *ngIf="form.errors?.['mismatch'] && form.get('confirmaSenha')?.dirty" class="p-error text-sm mb-3">
           As senhas não coincidem.
         </div>
@@ -159,9 +150,7 @@ O formulário branco (surface-card) se destaca perfeitamente no fundo escuro.
       </form>
     </div>
 
-    <!-- ======================================= -->
-    <!-- ========= FORMULÁRIO DE RECUPERAÇÃO ==== -->
-    <!-- ======================================= -->
+
     <div *ngIf="formMode === 'RECOVER'">
       <div class="text-center mb-5">
         <div class="text-900 text-3xl font-medium mb-3">Recuperar Senha</div>
@@ -176,7 +165,7 @@ O formulário branco (surface-card) se destaca perfeitamente no fundo escuro.
           <input type="email" pInputText formControlName="email" class="w-full">
         </div>
 
-        <!-- CAMPOS ADICIONAIS DE RECUPERAÇÃO -->
+
         <div class="field">
           <label>Data de Nascimento</label>
           <input type="date" pInputText formControlName="dataNascimento" class="w-full" [max]="today">
@@ -198,7 +187,7 @@ O formulário branco (surface-card) se destaca perfeitamente no fundo escuro.
         <div *ngIf="form.get('confirmaNovaSenha')?.invalid && (form.get('confirmaNovaSenha')?.dirty || form.get('confirmaNovaSenha')?.touched)" class="p-error text-sm mb-3">
           <span *ngIf="form.get('confirmaNovaSenha')?.errors?.['required']">Confirmação da nova senha é obrigatória.</span>
         </div>
-        <!-- MENSAGEM DE ERRO PARA SENHAS QUE NÃO COINCIDEM -->
+      
         <div *ngIf="form.errors?.['mismatchRecover'] && form.get('confirmaNovaSenha')?.dirty" class="p-error text-sm mb-3">
           As senhas não coincidem.
         </div>
