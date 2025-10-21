@@ -26,8 +26,8 @@ jobs:
       - name: Instalar dependências
         run: npm ci
 
-      - name: Build do projeto Angular
-        run: npm run build --if-present
+      - name: Build do projeto Angular (browser)
+        run: npm run build --if-present -- --configuration production
 
   deploy:
     name: Deploy para GitHub Pages (apenas main)
@@ -41,5 +41,5 @@ jobs:
       - name: Deploy para GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4
         with:
-          branch: gh-pages  # branch de destino do deploy
-          folder: dist/ui-app-frontend  # pasta do build Angular
+          branch: gh-pages
+          folder: dist/ui-app-frontend
