@@ -141,11 +141,8 @@
         <div *ngIf="form.get('confirmaSenha')?.invalid && (form.get('confirmaSenha')?.dirty || form.get('confirmaSenha')?.touched)" class="p-error text-sm mb-3">
           <span *ngIf="form.get('confirmaSenha')?.errors?.['required']">Confirmação de senha é obrigatória.</span>
         </div>
-<<<<<<< HEAD
 
-=======
-        
->>>>>>> 7439aa50587df637bfe518dcf17ad782ffda528a
+
         <div *ngIf="form.errors?.['mismatch'] && form.get('confirmaSenha')?.dirty" class="p-error text-sm mb-3">
           As senhas não coincidem.
         </div>
@@ -154,11 +151,6 @@
       </form>
     </div>
 
-<<<<<<< HEAD
-
-=======
-  
->>>>>>> 7439aa50587df637bfe518dcf17ad782ffda528a
     <div *ngIf="formMode === 'RECOVER'">
       <div class="text-center mb-5">
         <div class="text-900 text-3xl font-medium mb-3">Recuperar Senha</div>
