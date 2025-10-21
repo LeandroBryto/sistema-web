@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CardModule } from 'primeng/card';
 import { AvatarModule } from 'primeng/avatar';
@@ -7,6 +7,11 @@ import { SelectButtonModule } from 'primeng/selectbutton';
 import { ChartModule } from 'primeng/chart';
 import { Chart, registerables } from 'chart.js';
 import { RouterModule } from '@angular/router';
+import { MenuModule } from 'primeng/menu';
+import { MenuItem } from 'primeng/api';
+import { Menu } from 'primeng/menu';
+import { TokenStorage } from '../services/token-storage';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-home',
@@ -22,13 +27,14 @@ import { RouterModule } from '@angular/router';
     AvatarModule,
     CardModule,
     SelectButtonModule,
-    ChartModule
+    ChartModule,
+    MenuModule
   ],
   templateUrl: './home.html',
   styleUrl: './home.scss'
 })
 export class Home implements OnInit {
-    // --- Dados para o Gráfico ---
+  // --- Dados para o Gráfico ---
   chartData: any;
   chartOptions: any;
 
@@ -36,18 +42,45 @@ export class Home implements OnInit {
   timeRangeOptions: any[] = [];
   selectedTimeRange: string = '7d'; // Valor inicial
 
-  constructor() {
-    // Registrar todos os componentes do Chart.js
-    Chart.register(...registerables);
-  }
+  // Usuário (avatar no topo direito)
+  userInitials: string = '';
+  menuItems: MenuItem[] = [];
+  @ViewChild('userMenu') userMenu!: Menu;
+
+  constructor(private tokenStorage: TokenStorage, private router: Router) {}
 
   ngOnInit() {
+    // Se precisar, registre Chart.js
+    try { Chart.register(...registerables); } catch {}
+
+    // Inicializa dados do gráfico se necessário
     this.initChart();
-    
-    this.timeRangeOptions = [
-      { label: 'Últimos 7 dias', value: '7d' },
-      { label: 'Último Mês', value: '30d' }
+
+    // Inicializa menu do usuário
+    const user = this.tokenStorage.getUser();
+    const name: string = user?.nome || user?.name || 'Usuário';
+    this.userInitials = this.getInitials(name);
+
+    this.menuItems = [
+      {
+        label: 'Sair',
+        icon: 'pi pi-sign-out',
+        command: () => this.logout()
+      }
     ];
+  }
+
+  logout() {
+    this.tokenStorage.signOut();
+    this.router.navigateByUrl('/auth/login');
+  }
+
+  private getInitials(fullName: string): string {
+    const parts = fullName.trim().split(/\s+/);
+    if (parts.length === 0) return '';
+    const first = parts[0]?.charAt(0) ?? '';
+    const last = parts.length > 1 ? parts[parts.length - 1].charAt(0) : '';
+    return (first + last).toUpperCase();
   }
 
   initChart() {
@@ -103,13 +136,5 @@ export class Home implements OnInit {
         }
       }
     };
-  }
-
-  // Você pode adicionar um método para atualizar o gráfico
-  // quando o selectedTimeRange mudar, por exemplo:
-  onTimeRangeChange(event: any) {
-    console.log('Período selecionado:', event.value);
-    // Aqui você faria a lógica para buscar novos dados
-    // e atualizar this.chartData
   }
 }

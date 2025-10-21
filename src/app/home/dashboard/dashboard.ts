@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CardModule } from 'primeng/card';
 import { AvatarModule } from 'primeng/avatar';
@@ -7,11 +7,15 @@ import { SelectButtonModule } from 'primeng/selectbutton';
 import { ChartModule } from 'primeng/chart';
 import { Chart, registerables } from 'chart.js';
 import { TokenStorage } from '../../services/token-storage';
+import { MenuModule } from 'primeng/menu';
+import { MenuItem } from 'primeng/api';
+import { Menu } from 'primeng/menu';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule, FormsModule, CardModule, AvatarModule, SelectButtonModule, ChartModule],
+  imports: [CommonModule, FormsModule, CardModule, AvatarModule, SelectButtonModule, ChartModule, MenuModule],
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.scss'
 })
@@ -23,8 +27,10 @@ export class Dashboard implements OnInit {
   selectedTimeRange: string = '7d';
 
   userInitials: string = '';
+  menuItems: MenuItem[] = [];
+  @ViewChild('userMenu') userMenu!: Menu;
 
-  constructor(private tokenStorage: TokenStorage) {
+  constructor(private tokenStorage: TokenStorage, private router: Router) {
     Chart.register(...registerables);
   }
 
@@ -38,14 +44,26 @@ export class Dashboard implements OnInit {
     const user = this.tokenStorage.getUser();
     const name: string = user?.nome || user?.name || '';
     this.userInitials = this.getInitials(name || 'Usuário');
+
+    this.menuItems = [
+      {
+        label: 'Sair',
+        icon: 'pi pi-sign-out',
+        command: () => this.logout()
+      }
+    ];
   }
 
   onTimeRangeChange() {
     this.initChart();
   }
 
+  logout() {
+    this.tokenStorage.signOut();
+    this.router.navigateByUrl('/auth/login');
+  }
+
   private getInitials(fullName: string): string {
-    // Remove espaços extras e divide por espaços
     const parts = fullName.trim().split(/\s+/);
     if (parts.length === 0) return '';
     const first = parts[0]?.charAt(0) ?? '';

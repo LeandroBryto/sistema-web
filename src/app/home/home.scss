@@ -52,6 +52,22 @@
   background: transparent;
 }
 
+/* Topbar fixa no topo do conteúdo */
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: var(--surface-card);
+  border-bottom: 1px solid var(--surface-border);
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 0.5rem 1rem;
+  gap: 0.5rem;
+  width: 100%;
+  text-align: right;
+}
+
 /* Estilo do Avatar do usuário no topo */
 .user-avatar {
   background-color: #fdd8b1;
@@ -70,7 +86,7 @@
 
 :host ::ng-deep .p-selectbutton .p-button {
   background: var(--surface-a);
-  border-color: var(--surface-d);
+
   color: var(--text-color-secondary);
   font-weight: 500;
   padding: 0.5rem 1rem;
