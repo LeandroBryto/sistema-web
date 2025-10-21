@@ -1,4 +1,4 @@
-name: CI Pipeline
+name: CI Pipeline - Build Angular
 
 on:
   push:
@@ -24,5 +24,5 @@ jobs:
       - name: Instalar dependências
         run: npm ci
 
-      - name: Build do projeto Angular (somente browser)
-        run: ng build --configuration production
+      - name: Build do projeto Angular
+        run: npm run build --if-present
