@@ -1,7 +1,7 @@
 <div class="dashboard-container p-4">
   <div class="dashboard-header flex justify-content-between align-items-center mb-4">
     <h2 class="m-0 text-3xl font-semibold">Dashboard de Gestão</h2>
-    <p-avatar icon="pi pi-user" styleClass="user-avatar" size="large" shape="circle"></p-avatar>
+    <p-avatar [label]="userInitials" styleClass="user-avatar" size="large" shape="circle"></p-avatar>
   </div>
 
   <div class="grid">
@@ -51,26 +51,5 @@
     </div>
   </div>
 
-  <div class="grid mt-3">
-    <div class="col-12">
-      <p-card>
-        <ng-template pTemplate="header">
-          <div class="flex justify-content-between align-items-center p-3 border-bottom-1 surface-border">
-            <div>
-              <div class="text-xl font-bold">Crescimento de Novos Usuários</div>
-              <span class="text-sm text-500">Últimos 30 dias</span>
-            </div>
-            <p-selectButton 
-              [options]="timeRangeOptions" 
-              [(ngModel)]="selectedTimeRange" 
-              optionLabel="label" 
-              optionValue="value"
-              (onChange)="onTimeRangeChange()">
-            </p-selectButton>
-          </div>
-        </ng-template>
-        <p-chart type="line" [data]="chartData" [options]="chartOptions" height="300px"></p-chart>
-      </p-card>
-    </div>
-  </div>
+
 </div>

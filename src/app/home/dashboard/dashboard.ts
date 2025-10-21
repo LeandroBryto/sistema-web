@@ -6,11 +6,12 @@ import { AvatarModule } from 'primeng/avatar';
 import { SelectButtonModule } from 'primeng/selectbutton';
 import { ChartModule } from 'primeng/chart';
 import { Chart, registerables } from 'chart.js';
+import { TokenStorage } from '../../services/token-storage';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
- imports: [CommonModule, FormsModule, CardModule, AvatarModule, SelectButtonModule, ChartModule],
+  imports: [CommonModule, FormsModule, CardModule, AvatarModule, SelectButtonModule, ChartModule],
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.scss'
 })
@@ -21,7 +22,9 @@ export class Dashboard implements OnInit {
   timeRangeOptions: any[] = [];
   selectedTimeRange: string = '7d';
 
-  constructor() {
+  userInitials: string = '';
+
+  constructor(private tokenStorage: TokenStorage) {
     Chart.register(...registerables);
   }
 
@@ -31,10 +34,23 @@ export class Dashboard implements OnInit {
       { label: 'Últimos 7 dias', value: '7d' },
       { label: 'Último Mês', value: '30d' }
     ];
+
+    const user = this.tokenStorage.getUser();
+    const name: string = user?.nome || user?.name || '';
+    this.userInitials = this.getInitials(name || 'Usuário');
   }
 
   onTimeRangeChange() {
     this.initChart();
+  }
+
+  private getInitials(fullName: string): string {
+    // Remove espaços extras e divide por espaços
+    const parts = fullName.trim().split(/\s+/);
+    if (parts.length === 0) return '';
+    const first = parts[0]?.charAt(0) ?? '';
+    const last = parts.length > 1 ? parts[parts.length - 1].charAt(0) : '';
+    return (first + last).toUpperCase();
   }
 
   private initChart() {
