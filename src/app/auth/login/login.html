@@ -150,7 +150,7 @@ O formulário branco (surface-card) se destaca perfeitamente no fundo escuro.
         <div *ngIf="form.get('confirmaSenha')?.invalid && (form.get('confirmaSenha')?.dirty || form.get('confirmaSenha')?.touched)" class="p-error text-sm mb-3">
           <span *ngIf="form.get('confirmaSenha')?.errors?.['required']">Confirmação de senha é obrigatória.</span>
         </div>
-        <!-- MENSAGEM DE ERRO PARA SENHAS QUE NÃO COINCIDEM -->
+        
         <div *ngIf="form.errors?.['mismatch'] && form.get('confirmaSenha')?.dirty" class="p-error text-sm mb-3">
           As senhas não coincidem.
         </div>
@@ -159,9 +159,7 @@ O formulário branco (surface-card) se destaca perfeitamente no fundo escuro.
       </form>
     </div>
 
-    <!-- ======================================= -->
-    <!-- ========= FORMULÁRIO DE RECUPERAÇÃO ==== -->
-    <!-- ======================================= -->
+  
     <div *ngIf="formMode === 'RECOVER'">
       <div class="text-center mb-5">
         <div class="text-900 text-3xl font-medium mb-3">Recuperar Senha</div>
