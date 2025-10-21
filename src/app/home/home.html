@@ -1,5 +1,130 @@
-<div class="home-container">
-  <h1>Home</h1>
-  <p>Redirecionado após login com sucesso.</p>
-</div>
+<div class="layout">
+  <aside class="sidebar surface-card">
+    <div class="sidebar-top">
+      <nav class="sidebar-nav">
+        <ul class="list-none p-0 m-0">
+          <li>
+            <a class="nav-link" routerLink="/dashboard" routerLinkActive="active-link" [routerLinkActiveOptions]="{ exact: true }">
+              <i class="pi pi-th-large"></i>
+              <span>Dashboard</span>
+            </a>
+          </li>
+          <li>
+            <a class="nav-link" routerLink="/usuarios" routerLinkActive="active-link">
+              <i class="pi pi-users"></i>
+              <span>Usuários</span>
+            </a>
+          </li>
+          <li>
+            <a class="nav-link" routerLink="/projetos" routerLinkActive="active-link">
+              <i class="pi pi-folder"></i>
+              <span>Projetos</span>
+            </a>
+          </li>
+          <li>
+            <a class="nav-link" routerLink="/financeiro" routerLinkActive="active-link">
+              <i class="pi pi-dollar"></i>
+              <span>Financeiro</span>
+            </a>
+          </li>
+        </ul>
+      </nav>
+    </div>
 
+    <div class="sidebar-bottom">
+      <nav class="sidebar-nav">
+        <ul class="list-none p-0 m-0">
+          <li>
+            <a class="nav-link" routerLink="/configuracoes" routerLinkActive="active-link">
+              <i class="pi pi-cog"></i>
+              <span>Configurações</span>
+            </a>
+          </li>
+        </ul>
+      </nav>
+    </div>
+  </aside>
+
+  <main class="main-content">
+    <div class="dashboard-container p-4">
+      
+      <div class="dashboard-header flex justify-content-between align-items-center mb-4">
+        <h2 class="m-0 text-3xl font-semibold">Dashboard de Gestão</h2>
+        <p-avatar icon="pi pi-user" styleClass="user-avatar" size="large" shape="circle"></p-avatar>
+      </div>
+
+      <div class="grid">
+        
+        <div class="col-12 md:col-4">
+          <p-card styleClass="h-full">
+            <div class="flex align-items-center">
+              <div class="flex align-items-center justify-content-center bg-blue-100 border-round" style="width:3.5rem; height:3.5rem">
+                <i class="pi pi-users text-blue-500 text-3xl"></i>
+              </div>
+              <div class="ml-3">
+                <span class="text-500 font-medium">Usuários Ativos</span>
+                <div class="text-900 text-3xl font-bold my-1">1,250</div>
+                <span class="text-green-500 font-medium">+5% no último mês</span>
+              </div>
+            </div>
+          </p-card>
+        </div>
+
+        <div class="col-12 md:col-4">
+          <p-card styleClass="h-full">
+            <div class="flex align-items-center">
+              <div class="flex align-items-center justify-content-center bg-orange-100 border-round" style="width:3.5rem; height:3.5rem">
+                <i class="pi pi-folder text-orange-500 text-3xl"></i>
+              </div>
+              <div class="ml-3">
+                <span class="text-500 font-medium">Projetos em Andamento</span>
+                <div class="text-900 text-3xl font-bold my-1">15</div>
+                <span class="text-green-500 font-medium">+2 no último mês</span>
+              </div>
+            </div>
+          </p-card>
+        </div>
+
+        <div class="col-12 md:col-4">
+          <p-card styleClass="h-full">
+            <div class="flex align-items-center">
+              <div class="flex align-items-center justify-content-center bg-green-100 border-round" style="width:3.5rem; height:3.5rem">
+                <i class="pi pi-dollar text-green-500 text-3xl"></i>
+              </div>
+              <div class="ml-3">
+                <span class="text-500 font-medium">Faturamento Mensal</span>
+                <div class="text-900 text-3xl font-bold my-1">R$25.000</div>
+                <span class="text-green-500 font-medium">+10% no último mês</span>
+              </div>
+            </div>
+          </p-card>
+        </div>
+      </div>
+
+      <div class="grid mt-3">
+        <div class="col-12">
+          <p-card>
+            <ng-template pTemplate="header">
+              <div class="flex justify-content-between align-items-center p-3 border-bottom-1 surface-border">
+                <div>
+                  <div class="text-xl font-bold">Crescimento de Novos Usuários</div>
+                  <span class="text-sm text-500">Últimos 30 dias</span>
+                </div>
+                <p-selectButton 
+                  [options]="timeRangeOptions" 
+                  [(ngModel)]="selectedTimeRange" 
+                  optionLabel="label" 
+                  optionValue="value"
+                  (onChange)="onTimeRangeChange($event)">
+                </p-selectButton>
+              </div>
+            </ng-template>
+            
+            <p-chart type="line" [data]="chartData" [options]="chartOptions" height="300px"></p-chart>
+          </p-card>
+        </div>
+      </div>
+
+    </div>
+  </main>
+</div>
