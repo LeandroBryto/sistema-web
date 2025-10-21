@@ -1,0 +1,211 @@
+<!-- O componente <p-toast> é essencial para mostrar as mensagens de sucesso/erro -->
+<p-toast></p-toast>
+
+<!--
+LAYOUT: Fundo sólido azul escuro do Placehold.co.
+O formulário branco (surface-card) se destaca perfeitamente no fundo escuro.
+-->
+<div
+  class="login-page flex min-h-screen align-items-center justify-content-center p-4"
+  style="
+    /* Fundo Placehold.co (Azul Escuro: #0F5DA8, Texto Branco) */
+    background-image: url('https://images.pexels.com/photos/1089438/pexels-photo-1089438.jpeg?auto=compress&cs=tinysrgb&w=1920&h=1080&dpr=1');
+    background-size: cover;
+    background-position: center center;
+    background-attachment: fixed;
+    /* A cor de fundo é escura, então não precisamos de um filtro (linear-gradient) */
+  "
+>
+  <!-- Card do Formulário Centralizado (Branco) -->
+  <div class="surface-card p-5 shadow-2 border-round w-full max-w-28rem lg:max-w-30rem animated fadeInDown">
+
+    <!-- Ícone e Identidade -->
+    <div class="mb-6 text-center">
+      <div class="mb-3 mx-auto" aria-label="Memora Auth Gate" style="width: 70px; height: 70px;">
+        <!-- Seu Ícone SVG -->
+        <svg width="70" height="70" viewBox="0 0 64 64" role="img">
+          <defs>
+            <linearGradient id="shieldGrad" x1="0" y1="0" x2="1" y2="1">
+              <!-- Cores escuras que se destacam no fundo branco do card -->
+              <stop offset="0%" stop-color="#0F5DA8"/>
+              <stop offset="100%" stop-color="#2F3C54"/>
+            </linearGradient>
+          </defs>
+          <!-- Escudo -->
+          <path d="M32 4 L52 12 V28 C52 40 44 50 32 56 C20 50 12 40 12 28 V12 L32 4 Z" fill="url(#shieldGrad)"/>
+          <!-- Check verde -->
+          <path d="M26 30 L31 35 L42 22" stroke="#8FD13B" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+          <!-- Cadeado -->
+          <g>
+            <rect x="24" y="34" rx="2" ry="2" width="16" height="12" fill="#17395B"/>
+            <rect x="28" y="30" rx="4" ry="4" width="8" height="8" fill="#17395B"/>
+            <circle cx="32" cy="40" r="2" fill="#FFFFFF"/>
+          </g>
+        </svg>
+      </div>
+      <div class="mt-2">
+        <div class="text-900 font-bold text-lg" style="letter-spacing:1px;">MEMORA</div>
+        <div class="text-600 text-sm">AUTH GATE</div>
+      </div>
+    </div>
+
+
+    <!-- ================================== -->
+    <!-- ========= FORMULÁRIO DE LOGIN ==== -->
+    <!-- ================================== -->
+    <div *ngIf="formMode === 'LOGIN'">
+      <div class="text-center mb-5">
+        <div class="text-900 text-3xl font-medium mb-3">Acesso ao Sistema</div>
+        <span class="text-600 font-medium">Não tem uma conta?
+          <a class="font-medium no-underline ml-2 text-blue-500 cursor-pointer" (click)="changeMode('REGISTER')">Crie aqui!</a>
+        </span>
+      </div>
+      <form [formGroup]="form" (ngSubmit)="submitForm()">
+        <div class="field">
+          <label for="email" class="block text-900 font-medium mb-2">Email</label>
+          <input id="email" type="text" pInputText formControlName="email" class="w-full" placeholder="seu@email.com">
+        </div>
+        <div class="field">
+          <label for="senha" class="block text-900 font-medium mb-2">Senha</label>
+          <input id="senha" type="password" pInputText formControlName="senha" class="w-full" placeholder="••••••••">
+        </div>
+        <div class="flex align-items-center justify-content-end mb-4">
+          <a class="font-medium no-underline text-blue-500 text-right cursor-pointer" (click)="changeMode('RECOVER')">Esqueceu a senha?</a>
+        </div>
+        <button pButton pRipple label="Entrar" icon="pi pi-user" class="w-full" [loading]="loading" [disabled]="form.invalid"></button>
+      </form>
+    </div>
+
+    <!-- =================================== -->
+    <!-- ========= FORMULÁRIO DE REGISTO ==== -->
+    <!-- =================================== -->
+    <div *ngIf="formMode === 'REGISTER'">
+      <div class="text-center mb-5">
+        <div class="text-900 text-3xl font-medium mb-3">Crie a sua Conta</div>
+        <span class="text-600 font-medium">Já tem uma conta?
+          <a class="font-medium no-underline ml-2 text-blue-500 cursor-pointer" (click)="changeMode('LOGIN')">Faça o login!</a>
+        </span>
+      </div>
+      <form [formGroup]="form" (ngSubmit)="submitForm()">
+        <div class="field">
+          <label>Nome Completo</label>
+          <input type="text" pInputText formControlName="nome" class="w-full">
+        </div>
+        <div *ngIf="form.get('nome')?.invalid && (form.get('nome')?.dirty || form.get('nome')?.touched)" class="p-error text-sm mb-3">
+          <span *ngIf="form.get('nome')?.errors?.['required']">Nome é obrigatório.</span>
+          <span *ngIf="form.get('nome')?.errors?.['minlength']">Nome deve ter no mínimo 3 caracteres.</span>
+          <span *ngIf="form.get('nome')?.errors?.['maxlength']">Nome deve ter no máximo 100 caracteres.</span>
+        </div>
+        <div class="field">
+          <label>Email</label>
+          <input type="email" pInputText formControlName="email" class="w-full">
+        </div>
+        <div *ngIf="form.get('email')?.invalid && (form.get('email')?.dirty || form.get('email')?.touched)" class="p-error text-sm mb-3">
+          <span *ngIf="form.get('email')?.errors?.['required']">Email é obrigatório.</span>
+          <span *ngIf="form.get('email')?.errors?.['email']">Email deve ser válido.</span>
+          <span *ngIf="form.get('email')?.errors?.['maxlength']">Email deve ter no máximo 100 caracteres.</span>
+        </div>
+
+        <!-- CAMPOS ADICIONAIS DE REGISTO -->
+        <div class="grid">
+          <div class="field col-12 md:col-6">
+            <label>CPF</label>
+            <p-inputMask mask="999.999.999-99" formControlName="cpf" placeholder="000.000.000-00" class="w-full"></p-inputMask>
+          </div>
+          <div class="field col-12 md:col-6">
+            <label>Telefone</label>
+            <p-inputMask mask="(99) 99999-9999" formControlName="telefone" placeholder="(99) 99999-9999" class="w-full"></p-inputMask>
+          </div>
+        </div>
+        <div *ngIf="form.get('cpf')?.invalid && (form.get('cpf')?.dirty || form.get('cpf')?.touched)" class="p-error text-sm mb-3">
+          <span *ngIf="form.get('cpf')?.errors?.['required']">CPF é obrigatório.</span>
+          <span *ngIf="form.get('cpf')?.errors?.['cpfInvalid']">CPF inválido.</span>
+        </div>
+        <div *ngIf="form.get('telefone')?.invalid && (form.get('telefone')?.dirty || form.get('telefone')?.touched)" class="p-error text-sm mb-3">
+          <span *ngIf="form.get('telefone')?.errors?.['required']">Telefone é obrigatório.</span>
+          <span *ngIf="form.get('telefone')?.errors?.['telefoneLength']">Telefone deve conter entre 10 e 15 dígitos (com DDD).</span>
+        </div>
+        <div class="field">
+          <label>Data de Nascimento</label>
+          <input type="date" pInputText formControlName="dataNascimento" class="w-full" [max]="today">
+        </div>
+        <div *ngIf="form.get('dataNascimento')?.invalid && (form.get('dataNascimento')?.dirty || form.get('dataNascimento')?.touched)" class="p-error text-sm mb-3">
+          <span *ngIf="form.get('dataNascimento')?.errors?.['required']">Data de nascimento é obrigatória.</span>
+          <span *ngIf="form.get('dataNascimento')?.errors?.['dateNotPast']">Data de nascimento deve ser no passado.</span>
+        </div>
+        <div class="grid">
+          <div class="field col-12 md:col-6">
+            <label>Senha</label>
+            <input type="password" pInputText formControlName="senha" class="w-full">
+          </div>
+          <div class="field col-12 md:col-6">
+            <label>Confirmar Senha</label>
+            <input type="password" pInputText formControlName="confirmaSenha" class="w-full">
+          </div>
+        </div>
+        <div *ngIf="form.get('senha')?.invalid && (form.get('senha')?.dirty || form.get('senha')?.touched)" class="p-error text-sm mb-3">
+          <span *ngIf="form.get('senha')?.errors?.['required']">Senha é obrigatória.</span>
+          <span *ngIf="form.get('senha')?.errors?.['minlength']">Senha deve ter no mínimo 8 caracteres.</span>
+        </div>
+        <div *ngIf="form.get('confirmaSenha')?.invalid && (form.get('confirmaSenha')?.dirty || form.get('confirmaSenha')?.touched)" class="p-error text-sm mb-3">
+          <span *ngIf="form.get('confirmaSenha')?.errors?.['required']">Confirmação de senha é obrigatória.</span>
+        </div>
+        <!-- MENSAGEM DE ERRO PARA SENHAS QUE NÃO COINCIDEM -->
+        <div *ngIf="form.errors?.['mismatch'] && form.get('confirmaSenha')?.dirty" class="p-error text-sm mb-3">
+          As senhas não coincidem.
+        </div>
+
+        <button pButton pRipple label="Registar" icon="pi pi-check" class="w-full" [loading]="loading" [disabled]="form.invalid"></button>
+      </form>
+    </div>
+
+    <!-- ======================================= -->
+    <!-- ========= FORMULÁRIO DE RECUPERAÇÃO ==== -->
+    <!-- ======================================= -->
+    <div *ngIf="formMode === 'RECOVER'">
+      <div class="text-center mb-5">
+        <div class="text-900 text-3xl font-medium mb-3">Recuperar Senha</div>
+        <span class="text-600 font-medium">Lembrou-se da sua senha?
+          <a class="font-medium no-underline ml-2 text-blue-500 cursor-pointer" (click)="changeMode('LOGIN')">Voltar ao Login</a>
+        </span>
+      </div>
+      <form [formGroup]="form" (ngSubmit)="submitForm()">
+          <p class="text-center text-600 mb-3">Digite o seu email e data de nascimento para criar uma nova senha.</p>
+        <div class="field">
+          <label>Email</label>
+          <input type="email" pInputText formControlName="email" class="w-full">
+        </div>
+
+        <!-- CAMPOS ADICIONAIS DE RECUPERAÇÃO -->
+        <div class="field">
+          <label>Data de Nascimento</label>
+          <input type="date" pInputText formControlName="dataNascimento" class="w-full" [max]="today">
+        </div>
+        <div class="grid">
+          <div class="field col-12 md:col-6">
+            <label>Nova Senha</label>
+            <input type="password" pInputText formControlName="novaSenha" class="w-full">
+          </div>
+          <div class="field col-12 md:col-6">
+            <label>Confirmar Nova Senha</label>
+            <input type="password" pInputText formControlName="confirmaNovaSenha" class="w-full">
+          </div>
+        </div>
+        <div *ngIf="form.get('novaSenha')?.invalid && (form.get('novaSenha')?.dirty || form.get('novaSenha')?.touched)" class="p-error text-sm mb-3">
+          <span *ngIf="form.get('novaSenha')?.errors?.['required']">Nova senha é obrigatória.</span>
+          <span *ngIf="form.get('novaSenha')?.errors?.['minlength']">Nova senha deve ter no mínimo 8 caracteres.</span>
+        </div>
+        <div *ngIf="form.get('confirmaNovaSenha')?.invalid && (form.get('confirmaNovaSenha')?.dirty || form.get('confirmaNovaSenha')?.touched)" class="p-error text-sm mb-3">
+          <span *ngIf="form.get('confirmaNovaSenha')?.errors?.['required']">Confirmação da nova senha é obrigatória.</span>
+        </div>
+        <!-- MENSAGEM DE ERRO PARA SENHAS QUE NÃO COINCIDEM -->
+        <div *ngIf="form.errors?.['mismatchRecover'] && form.get('confirmaNovaSenha')?.dirty" class="p-error text-sm mb-3">
+          As senhas não coincidem.
+        </div>
+
+        <button pButton pRipple label="Redefinir Senha" icon="pi pi-key" class="w-full" [loading]="loading" [disabled]="form.invalid"></button>
+      </form>
+    </div>
+
+  </div>
+</div>
