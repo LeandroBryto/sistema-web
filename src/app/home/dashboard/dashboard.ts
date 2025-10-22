@@ -11,11 +11,19 @@ import { MenuModule } from 'primeng/menu';
 import { MenuItem } from 'primeng/api';
 import { Menu } from 'primeng/menu';
 import { Router } from '@angular/router';
+import { ButtonModule } from 'primeng/button';
+// Removido TabViewModule para evitar erro de módulo inexistente
+import { Vendas } from './padaria/vendas/vendas';
+import { Caixa } from './padaria/caixa/caixa';
+import { Produtos } from './padaria/produtos/produtos';
+import { Estoque } from './padaria/estoque/estoque';
+import { Relatorios } from './padaria/relatorios/relatorios';
+import { Clientes } from './padaria/clientes/clientes';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule, FormsModule, CardModule, AvatarModule, SelectButtonModule, ChartModule, MenuModule],
+  imports: [CommonModule, FormsModule, CardModule, AvatarModule, SelectButtonModule, ChartModule, MenuModule, ButtonModule, Vendas, Caixa, Produtos, Estoque, Relatorios, Clientes],
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.scss'
 })
@@ -29,6 +37,18 @@ export class Dashboard implements OnInit {
   userInitials: string = '';
   menuItems: MenuItem[] = [];
   @ViewChild('userMenu') userMenu!: Menu;
+
+  // Mostrar/ocultar módulo Padaria embutido no Dashboard
+  showPadaria: boolean = false;
+  padariaOptions = [
+    { label: 'Vendas', value: 'vendas' },
+    { label: 'Caixa', value: 'caixa' },
+    { label: 'Produtos', value: 'produtos' },
+    { label: 'Estoque', value: 'estoque' },
+    { label: 'Relatórios', value: 'relatorios' },
+    { label: 'Clientes', value: 'clientes' }
+  ];
+  selectedPadariaSection: string = 'vendas';
 
   constructor(private tokenStorage: TokenStorage, private router: Router) {
     Chart.register(...registerables);

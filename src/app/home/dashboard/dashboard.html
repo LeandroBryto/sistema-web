@@ -7,7 +7,26 @@
     </div>
   </div>
 
-  <div class="grid">
+  <!-- Barra full-width da Padaria -->
+  <div *ngIf="showPadaria" class="padaria-bar">
+    <div class="padaria-bar-header">
+      <span class="title">Padaria</span>
+      <p-button label="Fechar" icon="pi pi-times" severity="secondary" (click)="showPadaria=false"></p-button>
+    </div>
+    <div class="padaria-bar-controls mt-2">
+      <p-selectButton [options]="padariaOptions" [(ngModel)]="selectedPadariaSection"></p-selectButton>
+    </div>
+    <div class="padaria-bar-content mt-3">
+      <app-padaria-vendas *ngIf="selectedPadariaSection === 'vendas'"></app-padaria-vendas>
+      <app-padaria-caixa *ngIf="selectedPadariaSection === 'caixa'"></app-padaria-caixa>
+      <app-padaria-produtos *ngIf="selectedPadariaSection === 'produtos'"></app-padaria-produtos>
+      <app-padaria-estoque *ngIf="selectedPadariaSection === 'estoque'"></app-padaria-estoque>
+      <app-padaria-relatorios *ngIf="selectedPadariaSection === 'relatorios'"></app-padaria-relatorios>
+      <app-padaria-clientes *ngIf="selectedPadariaSection === 'clientes'"></app-padaria-clientes>
+    </div>
+  </div>
+
+  <div class="grid" *ngIf="!showPadaria">
     <div class="col-12 md:col-4">
       <p-card styleClass="h-full">
         <div class="flex align-items-center">
@@ -19,6 +38,9 @@
             <div class="text-900 text-3xl font-bold my-1">1,250</div>
             <span class="text-green-500 font-medium">+5% no último mês</span>
           </div>
+        </div>
+        <div class="mt-3">
+          <p-button label="Padaria" icon="pi pi-shopping-cart" (click)="showPadaria = true"></p-button>
         </div>
       </p-card>
     </div>
