@@ -19,11 +19,14 @@ import { Produtos } from './padaria/produtos/produtos';
 import { Estoque } from './padaria/estoque/estoque';
 import { Relatorios } from './padaria/relatorios/relatorios';
 import { Clientes } from './padaria/clientes/clientes';
+import { ToolbarModule } from 'primeng/toolbar'; // 1. IMPORTE AQUI
+
+
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule, FormsModule, CardModule, AvatarModule, SelectButtonModule, ChartModule, MenuModule, ButtonModule, Vendas, Caixa, Produtos, Estoque, Relatorios, Clientes],
+  imports: [CommonModule, FormsModule, CardModule, AvatarModule, SelectButtonModule, ChartModule, MenuModule, ButtonModule, Vendas, Caixa, Produtos, Estoque, Relatorios, Clientes,ToolbarModule],
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.scss'
 })

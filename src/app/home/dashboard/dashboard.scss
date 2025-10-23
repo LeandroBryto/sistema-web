@@ -1,40 +1,56 @@
-.dashboard-container { padding: 1rem; }
+
+.dashboard-container { padding: 5rem; }
 .dashboard-header { }
 
 .padaria-bar {
   width: 100%;
   background: var(--surface-card);
   border: 1px solid var(--surface-border);
-  border-radius: 12px;
-  padding: 1rem 1.25rem;
+  margin-left: -1rem;
+  margin-right: -10rem;
+  border-radius: 0;
+  padding: 2rem;
   margin-bottom: 1rem;
   box-shadow: 0 1px 2px rgba(0,0,0,0.04);
-  min-height: 220px; /* barra maior */
+  /* ocupar quase toda a altura da viewport */
+  min-height: calc(100vh - 140px);
 }
 
 .padaria-bar-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  
 }
 
 .padaria-bar-header .title {
-  font-size: 1.25rem;
-  font-weight: 600;
+  font-size: 1.4rem;
+  font-weight: 700;
+  
 }
 
 .padaria-bar-controls {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.75rem;
+  flex-direction: column;
+  
+  
 }
 
-/* Deixar o seletor com botões maiores */
 :host ::ng-deep .padaria-bar .p-selectbutton .p-button {
-  font-size: 0.95rem;
-  padding: 0.6rem 1rem;
+  font-size: 1rem;
+  padding: 0.7rem 1.2rem;
+  
 }
 
 .padaria-bar-content {
-  margin-top: 0.75rem;
+  margin-top: 1rem;
+  
+  padding-top: 2rem;   
+  padding-bottom: 2rem; 
+  
+  padding-left: 1rem;  
+  padding-right: 1rem;  
+  
 }

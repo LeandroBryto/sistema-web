@@ -1,6 +1,6 @@
 <div class="dashboard-container p-4">
   <div class="dashboard-header flex align-items-center mb-4">
-    <h2 class="m-0 text-3xl font-semibold">Dashboard de Gestão</h2>
+    <h1 class="m-0 text-3xl font-extrabold text-100">Dashboard de Gestão</h1>
     <div class="ml-auto flex align-items-center">
       <p-avatar [label]="userInitials" styleClass="user-avatar cursor-pointer" size="large" shape="circle" (click)="userMenu.toggle($event)"></p-avatar>
       <p-menu #userMenu [popup]="true" [model]="menuItems"></p-menu>
@@ -26,55 +26,68 @@
     </div>
   </div>
 
-  <div class="grid" *ngIf="!showPadaria">
-    <div class="col-12 md:col-4">
-      <p-card styleClass="h-full">
-        <div class="flex align-items-center">
-          <div class="flex align-items-center justify-content-center bg-blue-100 border-round" style="width:3.5rem; height:3.5rem">
-            <i class="pi pi-users text-blue-500 text-3xl"></i>
-          </div>
-          <div class="ml-3">
-            <span class="text-500 font-medium">Usuários Ativos</span>
-            <div class="text-900 text-3xl font-bold my-1">1,250</div>
-            <span class="text-green-500 font-medium">+5% no último mês</span>
-          </div>
-        </div>
-        <div class="mt-3">
-          <p-button label="Padaria" icon="pi pi-shopping-cart" (click)="showPadaria = true"></p-button>
-        </div>
-      </p-card>
+  <div *ngIf="!showPadaria">
+  
+  <p-toolbar styleClass="mb-4">
+    <div class="p-toolbar-group-start">
+        
+        <p-button 
+          label="Padaria" 
+          icon="pi pi-shopping-cart" 
+          (click)="showPadaria = true"
+          styleClass="mr-2">
+        </p-button>
+
+        <p-button
+         label="Rerstaurante"
+         icon="pi pi-shopping-bag"
+         (disabled)="true"
+         styleClass="mr-2">
+        </p-button>
+        
+        <p-button
+          label="Mercado"
+          icon="pi pi-shopping-cart"
+          (disabled)="true"
+          styleClass="mr-2">
+       </p-button>
+
+        <p-button
+           label="Salão de Beleza"
+           icon="pi pi-user"
+           (disabled)="true"
+           styleClass="mr-2">
+        </p-button>
+
+         <p-button
+          label="Lavanderia"
+          icon="pi pi-user"
+          styleClass="mr-2">
+         </p-button>
+        
+        <p-button
+        label="RH"
+        icon="pi pi-user"
+        (disabled)= "true"
+        styleClass="mr-2">
+        </p-button>
+
+          <p-button
+        label="Financeiro"
+        icon="pi pi-dollar"
+        (disabled)= "true"
+        styleClass="mr-2">
+        </p-button>
+
+        <p-button 
+          label="Relatórios" 
+          icon="pi pi-chart-bar" 
+          (disabled)="true"
+          styleClass="mr-2">
+        </p-button>
+        
     </div>
+    </p-toolbar>
 
-    <div class="col-12 md:col-4">
-      <p-card styleClass="h-full">
-        <div class="flex align-items-center">
-          <div class="flex align-items-center justify-content-center bg-orange-100 border-round" style="width:3.5rem; height:3.5rem">
-            <i class="pi pi-folder text-orange-500 text-3xl"></i>
-          </div>
-          <div class="ml-3">
-            <span class="text-500 font-medium">Projetos em Andamento</span>
-            <div class="text-900 text-3xl font-bold my-1">15</div>
-            <span class="text-green-500 font-medium">+2 no último mês</span>
-          </div>
-        </div>
-      </p-card>
-    </div>
-
-    <div class="col-12 md:col-4">
-      <p-card styleClass="h-full">
-        <div class="flex align-items-center">
-          <div class="flex align-items-center justify-content-center bg-green-100 border-round" style="width:3.5rem; height:3.5rem">
-            <i class="pi pi-dollar text-green-500 text-3xl"></i>
-          </div>
-          <div class="ml-3">
-            <span class="text-500 font-medium">Faturamento Mensal</span>
-            <div class="text-900 text-3xl font-bold my-1">R$25.000</div>
-            <span class="text-green-500 font-medium">+10% no último mês</span>
-          </div>
-        </div>
-      </p-card>
-    </div>
-  </div>
-
-
+</div>
 </div>
