@@ -1,6 +1,97 @@
+<p-toast></p-toast>
+<p-confirmDialog></p-confirmDialog>
+
 <div class="p-fluid">
-  <h3 class="mb-3">Cadastro de Clientes</h3>
+  <h3 class="mb-3 text-100">Cadastro de Clientes</h3>
+
+  <p-toolbar styleClass="mb-3 text-100">
+    <div class="p-toolbar-group-left">
+      <button pButton type="button" label="Novo Cliente" icon="pi pi-plus" (click)="openNew()"></button>
+    </div>
+  </p-toolbar>
+
   <p-card>
-    <p>Registro e gestão de clientes, fidelidade e contatos.</p>
+    <p-table [value]="clientes" [loading]="loading" responsiveLayout="scroll">
+      <ng-template pTemplate="header">
+        <tr>
+          <th>Nome</th>
+          <th>CPF</th>
+          <th>Telefone</th>
+          <th>Email</th>
+          <th style="width: 10rem;">Ações</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-cliente>
+        <tr>
+          <td>{{ cliente.nome }}</td>
+          <td>{{ cliente.cpf || '-' }}</td>
+          <td>{{ cliente.telefone || '-' }}</td>
+          <td>{{ cliente.email || '-' }}</td>
+          <td class="flex gap-2">
+            <button pButton type="button" icon="pi pi-eye" class="p-button-text p-button-rounded" (click)="viewCliente(cliente)" title="Ver"></button>
+            <button pButton type="button" icon="pi pi-pencil" class="p-button-text p-button-rounded" (click)="editCliente(cliente)" title="Editar"></button>
+            <button *ngIf="canDelete" pButton type="button" icon="pi pi-trash" class="p-button-text p-button-rounded p-button-danger" (click)="deleteCliente(cliente)" title="Excluir"></button>
+            <button pButton type="button" icon="pi pi-history" class="p-button-text p-button-rounded" (click)="historicoCliente(cliente)" title="Histórico"></button>
+          </td>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="footer">
+        <tr>
+          <td colspan="5">Total: {{ clientes.length }} cliente(s)</td>
+        </tr>
+      </ng-template>
+    </p-table>
   </p-card>
+
+  <!-- Dialog de Criação/Edição/Visualização -->
+  <p-dialog [(visible)]="displayDialog" [modal]="true" [style]="{width: '34rem'}" [closable]="true" [dismissableMask]="true" (onHide)="closeDialog()" [header]="viewMode ? 'Ver Cliente' : (isEdit ? 'Editar Cliente' : 'Novo Cliente')">
+    <form [formGroup]="form" class="p-fluid">
+      <div class="field">
+        <label for="nome">Nome</label>
+        <input id="nome" type="text" pInputText formControlName="nome" [readonly]="viewMode" />
+        <small class="p-error" *ngIf="isInvalid('nome')">Nome é obrigatório.</small>
+      </div>
+
+      <div class="field">
+        <label for="cpf">CPF</label>
+        <p-inputMask id="cpf" formControlName="cpf" mask="999.999.999-99" [readonly]="viewMode"></p-inputMask>
+      </div>
+
+      <div class="field">
+        <label for="telefone">Telefone</label>
+        <input id="telefone" type="text" pInputText formControlName="telefone" [readonly]="viewMode" />
+      </div>
+
+      <div class="field">
+        <label for="email">Email</label>
+        <input id="email" type="email" pInputText formControlName="email" [readonly]="viewMode" />
+        <small class="p-error" *ngIf="isInvalid('email')">Email inválido.</small>
+      </div>
+
+      <div class="flex justify-content-end gap-2 mt-3" *ngIf="!viewMode">
+        <button pButton type="button" label="Cancelar" severity="secondary" (click)="closeDialog()"></button>
+        <button pButton type="button" label="Salvar" (click)="saveCliente()" icon="pi pi-check"></button>
+      </div>
+    </form>
+  </p-dialog>
+
+  <!-- Dialog de Histórico -->
+  <p-dialog [(visible)]="showHistorico" [modal]="true" [style]="{width: '42rem'}" [closable]="true" [dismissableMask]="true" header="Histórico de Compras">
+    <p-table [value]="historico" [loading]="historicoLoading" responsiveLayout="scroll">
+      <ng-template pTemplate="header">
+        <tr>
+          <th>Venda</th>
+          <th>Data</th>
+          <th>Total</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-venda>
+        <tr>
+          <td>#{{ venda.id }}</td>
+          <td>{{ venda.data || '-' }}</td>
+          <td>{{ venda.total | number: '1.2-2' }}</td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </p-dialog>
 </div>

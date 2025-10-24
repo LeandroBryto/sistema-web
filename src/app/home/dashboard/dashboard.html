@@ -17,12 +17,12 @@
       <p-selectButton [options]="padariaOptions" [(ngModel)]="selectedPadariaSection"></p-selectButton>
     </div>
     <div class="padaria-bar-content mt-3">
+      <app-padaria-clientes *ngIf="selectedPadariaSection === 'clientes'"></app-padaria-clientes>
       <app-padaria-vendas *ngIf="selectedPadariaSection === 'vendas'"></app-padaria-vendas>
       <app-padaria-caixa *ngIf="selectedPadariaSection === 'caixa'"></app-padaria-caixa>
       <app-padaria-produtos *ngIf="selectedPadariaSection === 'produtos'"></app-padaria-produtos>
       <app-padaria-estoque *ngIf="selectedPadariaSection === 'estoque'"></app-padaria-estoque>
       <app-padaria-relatorios *ngIf="selectedPadariaSection === 'relatorios'"></app-padaria-relatorios>
-      <app-padaria-clientes *ngIf="selectedPadariaSection === 'clientes'"></app-padaria-clientes>
     </div>
   </div>
 
