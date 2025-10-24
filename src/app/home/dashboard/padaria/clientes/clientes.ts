@@ -1,4 +1,5 @@
 import { CommonModule } from '@angular/common';
+import { HttpClientModule } from '@angular/common/http';
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { CardModule } from 'primeng/card';
@@ -20,6 +21,7 @@ import { FormsModule } from '@angular/forms';
   standalone: true,
   imports: [
     CommonModule,
+    HttpClientModule,
     ReactiveFormsModule,
     FormsModule,
     CardModule,
@@ -34,7 +36,7 @@ import { FormsModule } from '@angular/forms';
   ],
   providers: [MessageService, ConfirmationService],
   templateUrl: './clientes.html',
-  styleUrl: './clientes.scss'
+  styleUrls: ['./clientes.scss']
 })
 export class Clientes implements OnInit {
   clientes: Cliente[] = [];
@@ -62,7 +64,15 @@ export class Clientes implements OnInit {
     private confirmationService: ConfirmationService,
     private tokenStorage: TokenStorage,
     private cdr: ChangeDetectorRef
-  ) {}
+  ) {
+    // Inicializa o form no construtor
+    this.form = this.fb.group({
+      nome: ['', [Validators.required]],
+      cpf: [''],
+      telefone: [''],
+      email: ['', [Validators.email]]
+    });
+  }
 
   ngOnInit(): void {
     this.evaluatePermissions();

@@ -7,6 +7,6 @@ import { CardModule } from 'primeng/card';
   standalone: true,
   imports: [CommonModule, CardModule],
   templateUrl: './projetos.html',
-  styleUrl: './projetos.scss'
+  styleUrls: ['./projetos.scss']
 })
 export class Projetos {}

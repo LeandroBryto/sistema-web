@@ -31,7 +31,7 @@ import { Router } from '@angular/router';
     MenuModule
   ],
   templateUrl: './home.html',
-  styleUrl: './home.scss'
+  styleUrls: ['./home.scss']
 })
 export class Home implements OnInit {
   // --- Dados para o Gráfico ---
@@ -84,7 +84,14 @@ export class Home implements OnInit {
   }
 
   initChart() {
-    const documentStyle = getComputedStyle(document.documentElement);
+    // Protege o uso de getComputedStyle em ambiente SSR
+    if (typeof window === 'undefined' || typeof (window as any)?.getComputedStyle !== 'function') {
+      this.chartData = { labels: [], datasets: [] };
+      this.chartOptions = {};
+      return;
+    }
+
+    const documentStyle = (window as any).getComputedStyle(document.documentElement);
     const textColor = documentStyle.getPropertyValue('--text-color');
     const textColorSecondary = documentStyle.getPropertyValue('--text-color-secondary');
     const surfaceBorder = documentStyle.getPropertyValue('--surface-border');

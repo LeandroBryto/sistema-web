@@ -7,6 +7,6 @@ import { CardModule } from 'primeng/card';
   standalone: true,
   imports: [CommonModule, CardModule],
   templateUrl: './vendas.html',
-  styleUrl: './vendas.scss'
+  styleUrls: ['./vendas.scss']
 })
 export class Vendas {}

@@ -17,23 +17,23 @@
       <p-selectButton [options]="padariaOptions" [(ngModel)]="selectedPadariaSection"></p-selectButton>
     </div>
     <div class="padaria-bar-content mt-3">
-      <app-padaria-clientes *ngIf="selectedPadariaSection === 'clientes'"></app-padaria-clientes>
-      <app-padaria-vendas *ngIf="selectedPadariaSection === 'vendas'"></app-padaria-vendas>
-      <app-padaria-caixa *ngIf="selectedPadariaSection === 'caixa'"></app-padaria-caixa>
-      <app-padaria-produtos *ngIf="selectedPadariaSection === 'produtos'"></app-padaria-produtos>
-      <app-padaria-estoque *ngIf="selectedPadariaSection === 'estoque'"></app-padaria-estoque>
-      <app-padaria-relatorios *ngIf="selectedPadariaSection === 'relatorios'"></app-padaria-relatorios>
+  <app-padaria-clientes [hidden]="selectedPadariaSection !== 'clientes'"></app-padaria-clientes>
+  <app-padaria-vendas [hidden]="selectedPadariaSection !== 'vendas'"></app-padaria-vendas>
+  <app-padaria-caixa [hidden]="selectedPadariaSection !== 'caixa'"></app-padaria-caixa>
+  <app-padaria-produtos [hidden]="selectedPadariaSection !== 'produtos'"></app-padaria-produtos>
+  <app-padaria-estoque [hidden]="selectedPadariaSection !== 'estoque'"></app-padaria-estoque>
+  <app-padaria-relatorios [hidden]="selectedPadariaSection !== 'relatorios'"></app-padaria-relatorios>
     </div>
   </div>
 
   <div *ngIf="!showPadaria">
-  
+
   <p-toolbar styleClass="mb-4">
     <div class="p-toolbar-group-start">
-        
-        <p-button 
-          label="Padaria" 
-          icon="pi pi-shopping-cart" 
+
+        <p-button
+          label="Padaria"
+          icon="pi pi-shopping-cart"
           (click)="showPadaria = true"
           styleClass="mr-2">
         </p-button>
@@ -44,7 +44,7 @@
          (disabled)="true"
          styleClass="mr-2">
         </p-button>
-        
+
         <p-button
           label="Mercado"
           icon="pi pi-shopping-cart"
@@ -64,7 +64,7 @@
           icon="pi pi-user"
           styleClass="mr-2">
          </p-button>
-        
+
         <p-button
         label="RH"
         icon="pi pi-user"
@@ -79,13 +79,13 @@
         styleClass="mr-2">
         </p-button>
 
-        <p-button 
-          label="Relatórios" 
-          icon="pi pi-chart-bar" 
+        <p-button
+          label="Relatórios"
+          icon="pi pi-chart-bar"
           (disabled)="true"
           styleClass="mr-2">
         </p-button>
-        
+
     </div>
     </p-toolbar>
 

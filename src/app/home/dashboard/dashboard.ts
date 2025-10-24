@@ -28,7 +28,7 @@ import { Toolbar } from "primeng/toolbar";
   standalone: true,
   imports: [CommonModule, FormsModule, CardModule, AvatarModule, SelectButtonModule, ChartModule, MenuModule, ButtonModule, Vendas, Caixa, Produtos, Estoque, Relatorios, Clientes, Toolbar],
   templateUrl: './dashboard.html',
-  styleUrl: './dashboard.scss'
+  styleUrls: ['./dashboard.scss']
 })
 export class Dashboard implements OnInit {
   chartData: any;
@@ -95,7 +95,15 @@ export class Dashboard implements OnInit {
   }
 
   private initChart() {
-    const documentStyle = getComputedStyle(document.documentElement);
+    // Proteger uso de getComputedStyle em ambiente server (SSR)
+    if (typeof window === 'undefined' || typeof (window as any)?.getComputedStyle !== 'function') {
+      // During SSR we can't access computed styles — set safe defaults
+      this.chartData = { labels: [], datasets: [] };
+      this.chartOptions = {};
+      return;
+    }
+
+    const documentStyle = (window as any).getComputedStyle(document.documentElement);
     const textColor = documentStyle.getPropertyValue('--text-color');
     const textColorSecondary = documentStyle.getPropertyValue('--text-color-secondary');
     const surfaceBorder = documentStyle.getPropertyValue('--surface-border');

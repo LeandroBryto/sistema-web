@@ -27,7 +27,7 @@ import { AuthService } from '../../services/auth';
   ],
   providers: [MessageService, AuthService],
   templateUrl: './login.html',
-  styleUrl: './login.scss'
+  styleUrls: ['./login.scss']
 })
 export class LoginComponent implements OnInit { // Convenção: LoginComponent
   form!: FormGroup;

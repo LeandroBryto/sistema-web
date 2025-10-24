@@ -8,6 +8,6 @@ import { CardModule } from 'primeng/card';
   standalone: true,
   imports: [CommonModule, RouterModule, CardModule],
   templateUrl: './padaria.html',
-  styleUrl: './padaria.scss'
+  styleUrls: ['./padaria.scss']
 })
 export class Padaria {}
