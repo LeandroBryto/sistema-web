@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { CardModule } from 'primeng/card';
 import { TableModule } from 'primeng/table';
@@ -13,6 +13,7 @@ import { ToastModule } from 'primeng/toast';
 import { MessageService, ConfirmationService } from 'primeng/api';
 import { ClientesService, Cliente, Venda } from '../../../../services/clientes';
 import { TokenStorage } from '../../../../services/token-storage';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-padaria-clientes',
@@ -20,6 +21,7 @@ import { TokenStorage } from '../../../../services/token-storage';
   imports: [
     CommonModule,
     ReactiveFormsModule,
+    FormsModule,
     CardModule,
     TableModule,
     ToolbarModule,
@@ -36,7 +38,10 @@ import { TokenStorage } from '../../../../services/token-storage';
 })
 export class Clientes implements OnInit {
   clientes: Cliente[] = [];
+  filteredClientes: Cliente[] = [];
   loading = false;
+
+  searchTerm = '';
 
   form!: FormGroup;
   displayDialog = false;
@@ -55,7 +60,8 @@ export class Clientes implements OnInit {
     private clientesService: ClientesService,
     private messageService: MessageService,
     private confirmationService: ConfirmationService,
-    private tokenStorage: TokenStorage
+    private tokenStorage: TokenStorage,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
@@ -82,13 +88,35 @@ export class Clientes implements OnInit {
     this.clientesService.listAll().subscribe({
       next: (data: Cliente[]) => {
         this.clientes = data || [];
+        this.applyFilter();
         this.loading = false;
+        this.cdr.detectChanges();
       },
       error: (err: any) => {
         this.loading = false;
         this.messageService.add({ severity: 'error', summary: 'Erro', detail: 'Falha ao carregar clientes.' });
+        this.cdr.detectChanges();
       }
     });
+  }
+
+  refreshList() {
+    this.loadClientes();
+  }
+
+  applyFilter() {
+    const term = (this.searchTerm || '').toLowerCase();
+    const normalize = (v: any) => String(v ?? '').toLowerCase();
+    this.filteredClientes = this.clientes.filter(c =>
+      normalize(c.nome).includes(term) ||
+      normalize(c.cpf).includes(term) ||
+      normalize(c.telefone).includes(term) ||
+      normalize(c.email).includes(term)
+    );
+  }
+
+  trackByClienteId(index: number, item: Cliente) {
+    return item.id ?? index;
   }
 
   openNew() {
@@ -97,6 +125,7 @@ export class Clientes implements OnInit {
     this.selectedCliente = null;
     this.buildForm();
     this.displayDialog = true;
+    this.cdr.detectChanges();
   }
 
   viewCliente(cliente: Cliente) {
@@ -106,6 +135,7 @@ export class Clientes implements OnInit {
     this.buildForm(cliente);
     this.form.disable();
     this.displayDialog = true;
+    this.cdr.detectChanges();
   }
 
   editCliente(cliente: Cliente) {
@@ -115,6 +145,7 @@ export class Clientes implements OnInit {
     this.buildForm(cliente);
     this.form.enable();
     this.displayDialog = true;
+    this.cdr.detectChanges();
   }
 
   private buildForm(cliente?: Cliente) {
@@ -138,11 +169,12 @@ export class Clientes implements OnInit {
     if (this.isEdit && this.selectedCliente?.id) {
       this.clientesService.update(this.selectedCliente.id, payload).subscribe({
         next: (updated: Cliente) => {
-          // Atualiza item localmente
           const idx = this.clientes.findIndex(c => c.id === updated.id);
           if (idx > -1) this.clientes[idx] = updated;
+          this.applyFilter();
           this.messageService.add({ severity: 'success', summary: 'Sucesso', detail: 'Cliente salvo.' });
           this.closeDialog();
+          this.cdr.detectChanges();
         },
         error: (err: any) => this.handleHttpError(err, 'Falha ao salvar cliente')
       });
@@ -150,8 +182,10 @@ export class Clientes implements OnInit {
       this.clientesService.create(payload).subscribe({
         next: (created: Cliente) => {
           this.clientes = [created, ...this.clientes];
+          this.applyFilter();
           this.messageService.add({ severity: 'success', summary: 'Sucesso', detail: 'Cliente salvo.' });
           this.closeDialog();
+          this.cdr.detectChanges();
         },
         error: (err: any) => this.handleHttpError(err, 'Falha ao criar cliente')
       });
@@ -172,7 +206,9 @@ export class Clientes implements OnInit {
         this.clientesService.delete(cliente.id!).subscribe({
           next: () => {
             this.clientes = this.clientes.filter(c => c.id !== cliente.id);
+            this.applyFilter();
             this.messageService.add({ severity: 'success', summary: 'Sucesso', detail: 'Cliente excluído.' });
+            this.cdr.detectChanges();
           },
           error: (err: any) => this.handleHttpError(err, 'Falha ao excluir cliente')
         });
@@ -188,10 +224,12 @@ export class Clientes implements OnInit {
       next: (vendas: Venda[]) => {
         this.historico = vendas || [];
         this.historicoLoading = false;
+        this.cdr.detectChanges();
       },
       error: (err: any) => {
         this.historicoLoading = false;
         this.handleHttpError(err, 'Falha ao carregar histórico');
+        this.cdr.detectChanges();
       }
     });
   }
@@ -200,6 +238,7 @@ export class Clientes implements OnInit {
     this.displayDialog = false;
     this.viewMode = false;
     if (this.form) this.form.enable();
+    this.cdr.detectChanges();
   }
 
   isInvalid(controlName: string): boolean {

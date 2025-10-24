@@ -11,3 +11,19 @@
 :host ::ng-deep .p-table td, :host ::ng-deep .p-table th {
   vertical-align: middle;
 }
+
+.toolbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.toolbar-search input[pInputText] {
+  width: 22rem;
+}
+
+.table-actions {
+  display: flex;
+  gap: 0.25rem;
+  align-items: center;
+}

@@ -5,20 +5,27 @@
   <h3 class="mb-3 text-100">Cadastro de Clientes</h3>
 
   <p-toolbar styleClass="mb-3 text-100">
-    <div class="p-toolbar-group-left">
+    <div class="p-toolbar-group-left toolbar-actions">
       <button pButton type="button" label="Novo Cliente" icon="pi pi-plus" (click)="openNew()"></button>
+      <button pButton type="button" label="Atualizar" icon="pi pi-refresh" class="ml-2" (click)="refreshList()"></button>
+    </div>
+    <div class="p-toolbar-group-right toolbar-search">
+      <span class="p-input-icon-left">
+        <i class="pi pi-search"></i>
+        <input pInputText type="text" placeholder="Pesquisar por nome, CPF, telefone ou email" [(ngModel)]="searchTerm" (input)="applyFilter()" />
+      </span>
     </div>
   </p-toolbar>
 
   <p-card>
-    <p-table [value]="clientes" [loading]="loading" responsiveLayout="scroll">
+    <p-table [value]="filteredClientes" [loading]="loading" responsiveLayout="scroll" [paginator]="true" [rows]="10" [rowsPerPageOptions]="[5,10,20]">
       <ng-template pTemplate="header">
         <tr>
           <th>Nome</th>
           <th>CPF</th>
           <th>Telefone</th>
           <th>Email</th>
-          <th style="width: 10rem;">Ações</th>
+          <th style="width: 12rem;">Ações</th>
         </tr>
       </ng-template>
       <ng-template pTemplate="body" let-cliente>
@@ -27,7 +34,7 @@
           <td>{{ cliente.cpf || '-' }}</td>
           <td>{{ cliente.telefone || '-' }}</td>
           <td>{{ cliente.email || '-' }}</td>
-          <td class="flex gap-2">
+          <td class="table-actions">
             <button pButton type="button" icon="pi pi-eye" class="p-button-text p-button-rounded" (click)="viewCliente(cliente)" title="Ver"></button>
             <button pButton type="button" icon="pi pi-pencil" class="p-button-text p-button-rounded" (click)="editCliente(cliente)" title="Editar"></button>
             <button *ngIf="canDelete" pButton type="button" icon="pi pi-trash" class="p-button-text p-button-rounded p-button-danger" (click)="deleteCliente(cliente)" title="Excluir"></button>
@@ -37,7 +44,12 @@
       </ng-template>
       <ng-template pTemplate="footer">
         <tr>
-          <td colspan="5">Total: {{ clientes.length }} cliente(s)</td>
+          <td colspan="5">Total: {{ filteredClientes.length }} cliente(s)</td>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="5" class="text-center">Nenhum cliente encontrado.</td>
         </tr>
       </ng-template>
     </p-table>
