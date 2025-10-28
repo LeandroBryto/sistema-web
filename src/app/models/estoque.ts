@@ -9,7 +9,7 @@ export interface Produto {
     unidadeMedida: UnidadeMedida;
     estoqueAtual: number;
     estoqueMinimo: number;
-    dataValidade: string; // ISO Date string
+    dataValidade: str; // ISO Date string
 }
 
 // DTO para entrada de estoque
