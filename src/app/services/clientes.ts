@@ -1,25 +1,13 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { environment } from '../../environments/environment';
+import { Cliente, Venda } from '../models/cliente';
 
-export interface Cliente {
-  id?: number;
-  nome: string;
-  cpf?: string;
-  telefone?: string;
-  email?: string;
-}
-
-export interface Venda {
-  id: number;
-  data?: string;
-  total?: number;
-  
-}
 
 @Injectable({ providedIn: 'root' })
 export class ClientesService {
-  private apiUrl = 'http://localhost:8081/api/clientes';
+  private apiUrl = `${environment.apiBaseUrl}/api/clientes`;
 
   constructor(private http: HttpClient) {}
 
@@ -53,3 +41,5 @@ export class ClientesService {
     return this.http.get<Venda[]>(`${this.apiUrl}/${id}/historico`);
   }
 }
+
+

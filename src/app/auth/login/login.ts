@@ -119,7 +119,7 @@ export class LoginComponent implements OnInit { // Convenção: LoginComponent
 
     switch (this.formMode) {
       case 'LOGIN':
-        const loginPayload: LoginRequest = { email: formValues.email, senha: formValues.senha };
+        const loginPayload: LoginRequest = { email: formValues.email, password: formValues.senha };
         this.authService.login(loginPayload).subscribe({
             next: this.handleAuthSuccess,
             error: this.handleAuthError,
@@ -151,7 +151,7 @@ export class LoginComponent implements OnInit { // Convenção: LoginComponent
   }
 
   private handleAuthSuccess = (data: AuthResponse) => {
-    this.tokenStorage.saveToken(data.token);
+    this.tokenStorage.saveToken(data.accessToken || data.token);
     this.tokenStorage.saveUser(data); // O backend retorna os dados do utilizador
     this.messageService.add({ severity: 'success', summary: 'Sucesso', detail: `Bem-vindo, ${data.nome}!` });
     this.router.navigateByUrl('/home'); // Redireciona para a página principal após o login

@@ -1,1 +1,295 @@
-.p-fluid { padding: 1rem; }
+.estoque-container {
+  padding: 1rem;
+  
+  .main-card {
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    
+    ::ng-deep .p-card-header {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      font-weight: 600;
+      font-size: 1.2rem;
+      border-radius: 8px 8px 0 0;
+    }
+  }
+
+  .search-input {
+    min-width: 300px;
+    
+    @media (max-width: 768px) {
+      min-width: 200px;
+    }
+  }
+
+  .produtos-table {
+    ::ng-deep {
+      .p-datatable {
+        .p-datatable-header {
+          background: #f8f9fa;
+          border: 1px solid #dee2e6;
+          padding: 1rem;
+        }
+
+        .p-datatable-thead > tr > th {
+          background: #495057;
+          color: white;
+          font-weight: 600;
+          border: 1px solid #495057;
+          padding: 0.75rem;
+          text-align: left;
+        }
+
+        .p-datatable-tbody > tr {
+          transition: background-color 0.2s;
+          
+          &:hover {
+            background-color: #f8f9fa;
+          }
+
+          > td {
+            padding: 0.75rem;
+            border: 1px solid #dee2e6;
+            vertical-align: middle;
+          }
+        }
+
+        .p-datatable-emptymessage > td {
+          text-align: center;
+          padding: 2rem;
+          color: #6c757d;
+        }
+      }
+
+      .p-paginator {
+        background: #f8f9fa;
+        border: 1px solid #dee2e6;
+        border-top: none;
+        padding: 0.5rem 1rem;
+        
+        .p-paginator-current {
+          color: #495057;
+          font-weight: 500;
+        }
+      }
+    }
+  }
+
+  // Estilos para os diálogos
+  ::ng-deep {
+    .p-dialog {
+      .p-dialog-header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        font-weight: 600;
+        border-radius: 6px 6px 0 0;
+      }
+
+      .p-dialog-content {
+        padding: 1.5rem;
+      }
+
+      .p-dialog-footer {
+        padding: 1rem 1.5rem;
+        background: #f8f9fa;
+        border-top: 1px solid #dee2e6;
+      }
+    }
+  }
+
+  // Estilos para formulários
+  .product-form,
+  .entrada-form {
+    .grid {
+      margin: 0;
+    }
+
+    label {
+      font-weight: 600;
+      color: #495057;
+    }
+
+    .p-inputtext,
+    .p-inputnumber,
+    .p-dropdown,
+    .p-calendar {
+      width: 100%;
+      
+      &.ng-invalid.ng-touched {
+        border-color: #dc3545;
+        box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25);
+      }
+    }
+
+    .p-error {
+      color: #dc3545;
+      font-size: 0.875rem;
+      margin-top: 0.25rem;
+    }
+  }
+
+  // Estilos para tags de status
+  ::ng-deep {
+    .p-tag {
+      font-weight: 600;
+      font-size: 0.75rem;
+      padding: 0.25rem 0.5rem;
+      border-radius: 4px;
+
+      &.p-tag-success {
+        background: #d4edda;
+        color: #155724;
+      }
+
+      &.p-tag-warning {
+        background: #fff3cd;
+        color: #856404;
+      }
+
+      &.p-tag-danger {
+        background: #f8d7da;
+        color: #721c24;
+      }
+    }
+  }
+
+  // Estilos para botões de ação
+  .flex.gap-2 {
+    .p-button {
+      &.p-button-text {
+        padding: 0.375rem;
+        min-width: auto;
+        
+        &:hover {
+          background-color: rgba(0, 0, 0, 0.04);
+        }
+      }
+    }
+  }
+
+  // Estilos para indicadores de data de validade
+  .text-red-500 {
+    color: #dc3545 !important;
+    font-weight: 600;
+  }
+
+  .text-orange-500 {
+    color: #fd7e14 !important;
+    font-weight: 600;
+  }
+
+  // Responsividade
+  @media (max-width: 768px) {
+    padding: 0.5rem;
+
+    .main-card {
+      ::ng-deep .p-card-header {
+        font-size: 1rem;
+        padding: 0.75rem 1rem;
+      }
+    }
+
+    .produtos-table {
+      ::ng-deep {
+        .p-datatable-thead > tr > th,
+        .p-datatable-tbody > tr > td {
+          padding: 0.5rem;
+          font-size: 0.875rem;
+        }
+      }
+    }
+
+    ::ng-deep {
+      .p-dialog {
+        width: 95vw !important;
+        max-width: 95vw !important;
+        margin: 0.5rem;
+      }
+    }
+
+    .search-input {
+      min-width: 150px;
+    }
+  }
+
+  @media (max-width: 576px) {
+    .produtos-table {
+      ::ng-deep {
+        .p-datatable {
+          font-size: 0.8rem;
+        }
+        
+        .p-datatable-thead > tr > th,
+        .p-datatable-tbody > tr > td {
+          padding: 0.375rem;
+        }
+      }
+    }
+
+    .flex.gap-2 {
+      flex-direction: column;
+      gap: 0.25rem;
+
+      .p-button {
+        width: 100%;
+        justify-content: flex-start;
+      }
+    }
+  }
+
+  // Animações
+  .p-button {
+    transition: all 0.2s ease-in-out;
+    
+    &:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+    }
+  }
+
+  .produtos-table {
+    ::ng-deep {
+      .p-datatable-tbody > tr {
+        transition: all 0.2s ease-in-out;
+        
+        &:hover {
+          transform: translateY(-1px);
+          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+      }
+    }
+  }
+
+  // Estilos para loading
+  ::ng-deep {
+    .p-datatable-loading-overlay {
+      background: rgba(255, 255, 255, 0.8);
+      
+      .p-datatable-loading-icon {
+        font-size: 2rem;
+        color: #667eea;
+      }
+    }
+  }
+
+  // Estilos para toolbar
+  ::ng-deep {
+    .p-toolbar {
+      background: #f8f9fa;
+      border: 1px solid #dee2e6;
+      border-radius: 6px;
+      padding: 0.75rem 1rem;
+
+      .p-toolbar-group-left,
+      .p-toolbar-group-right {
+        .p-button {
+          margin-right: 0.5rem;
+          
+          &:last-child {
+            margin-right: 0;
+          }
+        }
+      }
+    }
+  }
+}

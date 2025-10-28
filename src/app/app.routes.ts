@@ -11,6 +11,17 @@ export const routes: Routes = [
       { path: 'usuarios', loadComponent: () => import('./home/usuarios/usuarios').then(m => m.Usuarios) },
       { path: 'projetos', loadComponent: () => import('./home/projetos/projetos').then(m => m.Projetos) },
       { path: 'financeiro', loadComponent: () => import('./home/financeiro/financeiro').then(m => m.Financeiro) },
+      {
+        path: 'padaria',
+        loadComponent: () => import('./home/dashboard/padaria/padaria').then(m => m.Padaria),
+        children: [
+          { path: '', pathMatch: 'full', redirectTo: 'produtos' },
+          { path: 'clientes', loadComponent: () => import('./home/dashboard/padaria/clientes/clientes').then(m => m.Clientes) },
+          { path: 'produtos', loadComponent: () => import('./home/dashboard/padaria/produtos/produtos').then(m => m.Produtos) },
+          { path: 'estoque', loadComponent: () => import('./home/dashboard/padaria/estoque/estoque').then(m => m.Estoque) },
+          { path: 'relatorios', loadComponent: () => import('./home/dashboard/padaria/relatorios/relatorios').then(m => m.Relatorios) }
+        ]
+      },
     ]
   },
   {

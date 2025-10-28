@@ -1,6 +1,77 @@
 <div class="p-fluid">
-  <h3 class="mb-3">Cadastro de Produtos</h3>
+  <p-toast></p-toast>
+  <p-confirmDialog></p-confirmDialog>
+
+  <h3 class="mb-3">Produtos</h3>
+
+  <p-toolbar styleClass="mb-3">
+    <div class="p-toolbar-group-start">
+      <div class="toolbar-search">
+        <input pInputText [(ngModel)]="searchTerm" (ngModelChange)="onSearchTermChange()" placeholder="Buscar por nome ou descrição" />
+      </div>
+    </div>
+    <div class="p-toolbar-group-end">
+      <p-button label="Novo" icon="pi pi-plus" (click)="openNew()"></p-button>
+    </div>
+  </p-toolbar>
+
   <p-card>
-    <p>Área para cadastrar, editar e listar produtos da padaria.</p>
+    <p-table [value]="filteredProdutos" [loading]="loading" [tableStyle]="{ 'min-width': '50rem' }" [paginator]="true" [rows]="10" [responsiveLayout]="'scroll'" dataKey="id">
+      <ng-template pTemplate="header">
+        <tr>
+          <th>Nome</th>
+          <th style="width: 8rem">Preço</th>
+          <th>Descrição</th>
+          <th style="width: 6rem">Ativo</th>
+          <th style="width: 12rem">Ações</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-produto>
+        <tr>
+          <td>{{ produto.nome }}</td>
+          <td>{{ produto.preco | currency:'BRL':'symbol-narrow' }}</td>
+          <td>{{ produto.descricao }}</td>
+          <td>
+            <span [class]="produto.ativo ? 'text-green-500' : 'text-red-500'">
+              {{ produto.ativo ? 'Sim' : 'Não' }}
+            </span>
+          </td>
+          <td>
+            <div class="table-actions">
+              <p-button icon="pi pi-eye" severity="secondary" (click)="viewProduto(produto)"></p-button>
+              <p-button icon="pi pi-pencil" (click)="editProduto(produto)"></p-button>
+              <p-button icon="pi pi-trash" severity="danger" (click)="deleteProduto(produto)"></p-button>
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
   </p-card>
+
+  <!-- Diálogo de criação/edição -->
+  <p-dialog [(visible)]="displayDialog" [modal]="true" [style]="{width: '32rem'}" [header]="viewMode ? 'Visualizar Produto' : (isEdit ? 'Editar Produto' : 'Novo Produto')" [closable]="true" (onHide)="viewMode=false">
+    <form [formGroup]="form" (ngSubmit)="saveProduto()">
+      <div class="field">
+        <label for="nome">Nome</label>
+        <input id="nome" pInputText formControlName="nome" placeholder="Ex.: Pão Francês" />
+      </div>
+      <div class="field">
+        <label for="preco">Preço</label>
+        <input id="preco" pInputText formControlName="preco" placeholder="Ex.: 5.50" />
+      </div>
+      <div class="field">
+        <label for="descricao">Descrição</label>
+        <input id="descricao" pInputText formControlName="descricao" placeholder="Ex.: Unidade 50g" />
+      </div>
+      <div class="field">
+        <label for="ativo">Ativo</label>
+        <input id="ativo" type="checkbox" formControlName="ativo" />
+      </div>
+
+      <div class="dialog-actions" *ngIf="!viewMode">
+        <p-button type="button" label="Cancelar" severity="secondary" icon="pi pi-times" (click)="displayDialog=false"></p-button>
+        <p-button type="submit" label="Salvar" icon="pi pi-check" [disabled]="form.invalid"></p-button>
+      </div>
+    </form>
+  </p-dialog>
 </div>

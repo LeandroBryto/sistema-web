@@ -1,6 +1,391 @@
-<div class="p-fluid">
-  <h3 class="mb-3">Gestão de Estoque</h3>
-  <p-card>
-    <p>Controle de entradas, saídas, perdas e inventário.</p>
+<div class="estoque-container">
+  <p-card header="Gestão de Estoque" class="main-card">
+    <p-toolbar class="mb-4">
+      <ng-template pTemplate="left">
+        <div class="flex align-items-center gap-2">
+          <p-button 
+            icon="pi pi-plus" 
+            label="Novo Produto" 
+            severity="success" 
+            (click)="openNew()">
+          </p-button>
+          <p-button 
+            icon="pi pi-refresh" 
+            label="Atualizar" 
+            severity="info" 
+            (click)="loadProdutos()">
+          </p-button>
+        </div>
+      </ng-template>
+      
+      <ng-template pTemplate="right">
+        <div class="flex align-items-center gap-2">
+          <span class="p-input-icon-left">
+            <i class="pi pi-search"></i>
+            <input 
+              type="text" 
+              pInputText 
+              placeholder="Buscar por nome ou código..." 
+              [(ngModel)]="searchTerm"
+              (input)="onSearchTermChange()"
+              class="search-input">
+          </span>
+        </div>
+      </ng-template>
+    </p-toolbar>
+
+    <p-table 
+      [value]="filteredProdutos" 
+      [loading]="loading"
+      [paginator]="true" 
+      [rows]="10"
+      [rowsPerPageOptions]="[5, 10, 20, 50]"
+      [showCurrentPageReport]="true"
+      currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} produtos"
+      [rowTrackBy]="trackByProdutoId"
+      responsiveLayout="scroll"
+      class="produtos-table">
+      
+      <ng-template pTemplate="header">
+        <tr>
+          <th>Nome</th>
+          <th>Código de Barras</th>
+          <th>Preço Venda</th>
+          <th>Preço Custo</th>
+          <th>Unidade</th>
+          <th>Estoque Atual</th>
+          <th>Estoque Mínimo</th>
+          <th>Status</th>
+          <th>Data Validade</th>
+          <th>Ações</th>
+        </tr>
+      </ng-template>
+      
+      <ng-template pTemplate="body" let-produto>
+        <tr>
+          <td>
+            <span class="font-semibold">{{ produto.nome }}</span>
+          </td>
+          <td>
+            <span class="text-sm">{{ produto.codigoBarras }}</span>
+          </td>
+          <td>
+            <span class="font-medium">{{ produto.precoVenda | currency:'BRL':'symbol':'1.2-2' }}</span>
+          </td>
+          <td>
+            <span class="text-sm">{{ produto.precoCusto | currency:'BRL':'symbol':'1.2-2' }}</span>
+          </td>
+          <td>
+            <span class="text-sm">{{ produto.unidadeMedida }}</span>
+          </td>
+          <td>
+            <span class="font-medium">{{ produto.estoqueAtual }}</span>
+          </td>
+          <td>
+            <span class="text-sm">{{ produto.estoqueMinimo }}</span>
+          </td>
+          <td>
+            <p-tag 
+              [value]="getEstoqueLabel(produto)" 
+              [severity]="getEstoqueSeverity(produto)">
+            </p-tag>
+          </td>
+          <td>
+            <span 
+              class="text-sm"
+              [class.text-red-500]="isDataVencida(produto.dataValidade)"
+              [class.text-orange-500]="isDataVencimentoProxima(produto.dataValidade)">
+              {{ produto.dataValidade | date:'dd/MM/yyyy' }}
+            </span>
+          </td>
+          <td>
+            <div class="flex gap-2">
+              <p-button 
+                icon="pi pi-eye" 
+                severity="info" 
+                size="small"
+                [text]="true"
+                pTooltip="Visualizar"
+                (click)="viewProduto(produto)">
+              </p-button>
+              <p-button 
+                icon="pi pi-pencil" 
+                severity="warn" 
+                size="small"
+                [text]="true"
+                pTooltip="Editar"
+                (click)="editProduto(produto)">
+              </p-button>
+              <p-button 
+                icon="pi pi-plus-circle" 
+                severity="success" 
+                size="small"
+                [text]="true"
+                pTooltip="Entrada de Estoque"
+                (click)="openEntradaEstoque(produto)">
+              </p-button>
+              <p-button 
+                *ngIf="canDelete"
+                icon="pi pi-trash" 
+                severity="danger" 
+                size="small"
+                [text]="true"
+                pTooltip="Excluir"
+                (click)="deleteProduto(produto)">
+              </p-button>
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+      
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="10" class="text-center py-4">
+            <div class="flex flex-column align-items-center gap-3">
+              <i class="pi pi-inbox text-4xl text-400"></i>
+              <span class="text-lg text-600">Nenhum produto encontrado</span>
+              <p-button 
+                label="Adicionar Primeiro Produto" 
+                icon="pi pi-plus" 
+                severity="success"
+                (click)="openNew()">
+              </p-button>
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
   </p-card>
+
+  <!-- Dialog para Criar/Editar/Visualizar Produto -->
+  <p-dialog 
+    [(visible)]="displayDialog" 
+    [header]="viewMode ? 'Detalhes do Produto' : (isEdit ? 'Editar Produto' : 'Novo Produto')"
+    [modal]="true" 
+    [style]="{width: '50vw'}"
+    [maximizable]="true"
+    [closable]="true"
+    (onHide)="hideDialog()">
+    
+    <form [formGroup]="form" (ngSubmit)="submitForm()" class="product-form">
+      <div class="grid">
+        <div class="col-12 md:col-6">
+          <label for="nome" class="block text-900 font-medium mb-2">Nome *</label>
+          <input 
+            id="nome"
+            type="text" 
+            pInputText 
+            formControlName="nome"
+            class="w-full"
+            [class.ng-invalid]="form.get('nome')?.invalid && form.get('nome')?.touched">
+          <small 
+            *ngIf="form.get('nome')?.invalid && form.get('nome')?.touched" 
+            class="p-error block">
+            Nome é obrigatório (mínimo 2 caracteres)
+          </small>
+        </div>
+
+        <div class="col-12 md:col-6">
+          <label for="codigoBarras" class="block text-900 font-medium mb-2">Código de Barras *</label>
+          <input 
+            id="codigoBarras"
+            type="text" 
+            pInputText 
+            formControlName="codigoBarras"
+            class="w-full"
+            [class.ng-invalid]="form.get('codigoBarras')?.invalid && form.get('codigoBarras')?.touched">
+          <small 
+            *ngIf="form.get('codigoBarras')?.invalid && form.get('codigoBarras')?.touched" 
+            class="p-error block">
+            Código de barras é obrigatório
+          </small>
+        </div>
+
+        <div class="col-12 md:col-6">
+          <label for="precoVenda" class="block text-900 font-medium mb-2">Preço de Venda *</label>
+          <p-inputNumber
+            id="precoVenda"
+            formControlName="precoVenda"
+            mode="currency"
+            currency="BRL"
+            locale="pt-BR"
+            [min]="0.01"
+            class="w-full"
+            [class.ng-invalid]="form.get('precoVenda')?.invalid && form.get('precoVenda')?.touched">
+          </p-inputNumber>
+          <small 
+            *ngIf="form.get('precoVenda')?.invalid && form.get('precoVenda')?.touched" 
+            class="p-error block">
+            Preço de venda deve ser maior que R$ 0,01
+          </small>
+        </div>
+
+        <div class="col-12 md:col-6">
+          <label for="precoCusto" class="block text-900 font-medium mb-2">Preço de Custo *</label>
+          <p-inputNumber
+            id="precoCusto"
+            formControlName="precoCusto"
+            mode="currency"
+            currency="BRL"
+            locale="pt-BR"
+            [min]="0.01"
+            class="w-full"
+            [class.ng-invalid]="form.get('precoCusto')?.invalid && form.get('precoCusto')?.touched">
+          </p-inputNumber>
+          <small 
+            *ngIf="form.get('precoCusto')?.invalid && form.get('precoCusto')?.touched" 
+            class="p-error block">
+            Preço de custo deve ser maior que R$ 0,01
+          </small>
+        </div>
+
+        <div class="col-12 md:col-6">
+          <label for="unidadeMedida" class="block text-900 font-medium mb-2">Unidade de Medida *</label>
+          <p-select
+            id="unidadeMedida"
+            formControlName="unidadeMedida"
+            [options]="unidadeMedidaOptions"
+            optionLabel="label"
+            optionValue="value"
+            placeholder="Selecione a unidade"
+            class="w-full"
+            [class.ng-invalid]="form.get('unidadeMedida')?.invalid && form.get('unidadeMedida')?.touched">
+          </p-select>
+          <small 
+            *ngIf="form.get('unidadeMedida')?.invalid && form.get('unidadeMedida')?.touched" 
+            class="p-error block">
+            Unidade de medida é obrigatória
+          </small>
+        </div>
+
+        <div class="col-12 md:col-6">
+          <label for="dataValidade" class="block text-900 font-medium mb-2">Data de Validade *</label>
+          <p-datepicker
+            id="dataValidade"
+            formControlName="dataValidade"
+            dateFormat="dd/mm/yy"
+            class="w-full"
+            [class.ng-invalid]="form.get('dataValidade')?.invalid && form.get('dataValidade')?.touched">
+          </p-datepicker>
+          <small 
+            *ngIf="form.get('dataValidade')?.invalid && form.get('dataValidade')?.touched" 
+            class="p-error block">
+            Data de validade é obrigatória
+          </small>
+        </div>
+
+        <div class="col-12 md:col-6">
+          <label for="estoqueAtual" class="block text-900 font-medium mb-2">Estoque Atual *</label>
+          <p-inputNumber
+            id="estoqueAtual"
+            formControlName="estoqueAtual"
+            [min]="0"
+            [useGrouping]="false"
+            class="w-full"
+            [class.ng-invalid]="form.get('estoqueAtual')?.invalid && form.get('estoqueAtual')?.touched">
+          </p-inputNumber>
+          <small 
+            *ngIf="form.get('estoqueAtual')?.invalid && form.get('estoqueAtual')?.touched" 
+            class="p-error block">
+            Estoque atual deve ser maior ou igual a 0
+          </small>
+        </div>
+
+        <div class="col-12 md:col-6">
+          <label for="estoqueMinimo" class="block text-900 font-medium mb-2">Estoque Mínimo *</label>
+          <p-inputNumber
+            id="estoqueMinimo"
+            formControlName="estoqueMinimo"
+            [min]="0"
+            [useGrouping]="false"
+            class="w-full"
+            [class.ng-invalid]="form.get('estoqueMinimo')?.invalid && form.get('estoqueMinimo')?.touched">
+          </p-inputNumber>
+          <small 
+            *ngIf="form.get('estoqueMinimo')?.invalid && form.get('estoqueMinimo')?.touched" 
+            class="p-error block">
+            Estoque mínimo deve ser maior ou igual a 0
+          </small>
+        </div>
+      </div>
+    </form>
+
+    <ng-template pTemplate="footer">
+      <div class="flex justify-content-end gap-2">
+        <p-button 
+          label="Cancelar" 
+          icon="pi pi-times" 
+          severity="secondary"
+          (click)="hideDialog()">
+        </p-button>
+        <p-button 
+          *ngIf="!viewMode"
+          [label]="isEdit ? 'Atualizar' : 'Salvar'" 
+          [icon]="isEdit ? 'pi pi-check' : 'pi pi-save'"
+          severity="success"
+          (click)="submitForm()">
+        </p-button>
+      </div>
+    </ng-template>
+  </p-dialog>
+
+  <!-- Dialog para Entrada de Estoque -->
+  <p-dialog 
+    [(visible)]="displayEntradaDialog" 
+    header="Entrada de Estoque"
+    [modal]="true" 
+    [style]="{width: '30vw'}"
+    [closable]="true"
+    (onHide)="hideDialog()">
+    
+    <form [formGroup]="entradaForm" (ngSubmit)="submitEntradaForm()" class="entrada-form">
+      <div class="grid">
+        <div class="col-12">
+          <label class="block text-900 font-medium mb-2">Produto</label>
+          <p class="text-lg font-semibold text-primary">{{ selectedProduto?.nome }}</p>
+          <p class="text-sm text-600">Estoque atual: {{ selectedProduto?.estoqueAtual }}</p>
+        </div>
+
+        <div class="col-12">
+          <label for="quantidade" class="block text-900 font-medium mb-2">Quantidade *</label>
+          <p-inputNumber
+            id="quantidade"
+            formControlName="quantidade"
+            [min]="0.01"
+            [useGrouping]="false"
+            class="w-full"
+            [class.ng-invalid]="entradaForm.get('quantidade')?.invalid && entradaForm.get('quantidade')?.touched">
+          </p-inputNumber>
+          <small 
+            *ngIf="entradaForm.get('quantidade')?.invalid && entradaForm.get('quantidade')?.touched" 
+            class="p-error block">
+            Quantidade deve ser maior que 0
+          </small>
+        </div>
+      </div>
+    </form>
+
+    <ng-template pTemplate="footer">
+      <div class="flex justify-content-end gap-2">
+        <p-button 
+          label="Cancelar" 
+          icon="pi pi-times" 
+          severity="secondary"
+          (click)="hideDialog()">
+        </p-button>
+        <p-button 
+          label="Confirmar Entrada" 
+          icon="pi pi-check"
+          severity="success"
+          (click)="submitEntradaForm()">
+        </p-button>
+      </div>
+    </ng-template>
+  </p-dialog>
+
+  <!-- Toast Messages -->
+  <p-toast></p-toast>
+  
+  <!-- Confirm Dialog -->
+  <p-confirmDialog></p-confirmDialog>
 </div>

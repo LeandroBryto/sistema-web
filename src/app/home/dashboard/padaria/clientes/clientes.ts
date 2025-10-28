@@ -12,9 +12,10 @@ import { ButtonModule } from 'primeng/button';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ToastModule } from 'primeng/toast';
 import { MessageService, ConfirmationService } from 'primeng/api';
-import { ClientesService, Cliente, Venda } from '../../../../services/clientes';
+import { ClientesService } from '../../../../services/clientes';
 import { TokenStorage } from '../../../../services/token-storage';
 import { FormsModule } from '@angular/forms';
+import { Cliente, Venda } from '../../../../models/cliente';
 
 @Component({
   selector: 'app-padaria-clientes',
